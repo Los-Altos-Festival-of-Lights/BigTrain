@@ -49,13 +49,6 @@ def sequences():
     status_code, response = send_request(SEQUENCES_ENDPOINT, "get")
     return jsonify(response), status_code
 
-# @app.route('/api/select_sequence', methods=['POST'])
-# def select_sequence():
-#     res = request.get_json(force=True)
-#     selected_sequence = res.get("sequence")
-#     code = 200 if selected_sequence != "" else 500
-#     return jsonify(selected_sequence), code
-
 @app.route('/api/play', methods=['POST'])
 def play():
     res = request.get_json(force=True)

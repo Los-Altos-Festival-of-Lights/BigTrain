@@ -96,6 +96,19 @@
         height: 100%;
       }
 
+
+      .control-button-e {
+        flex-grow: 1;
+        font-size: 8vw; /* Responsive font size based on viewport width */
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        padding: 2vh 4vw;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+
       /* Status bar colors */
       #status-bar.server-unreachable {
         background-color: #dc3545;
@@ -158,7 +171,7 @@
     <div id="controls">
       <button class="control-button play" onclick="sendRequest(this, 'play')" disabled>Play</button>
       <button class="control-button stop" onclick="sendRequest(this, 'stop')" disabled>Stop</button>
-      <button class="control-button mute" onclick="sendRequest(this, 'mute')" disabled>Mute</button>
+      <button class="control-button-e reload" onclick="window.location.reload()" disabled>Refresh</button>
       <button class="control-button shutdown" onclick="sendRequest(this, 'shutdown')" disabled>Shutdown</button>
     </div>
     <script>
@@ -178,11 +191,6 @@
           })
           .catch((error) => console.error("Error fetching sequences:", error));
       }
-
-      // function submitForm() {
-      //   seq = document.getElementById("sequence-selector").value
-      //   fetch('/api/select_sequence', {method: "POST", body: JSON.stringify({"sequence": seq})})
-      // }
 
       function sendRequest(button, action) {
         button.classList.add("sending");
