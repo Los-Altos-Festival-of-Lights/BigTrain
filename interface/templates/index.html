@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>FOLIOS Christmas Train Control Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link href="./static/styles.css" rel="stylesheet" />
     <style>
       * {
         font-family: "Poppins", sans-serif;
@@ -166,7 +166,7 @@
         fetch("/api/sequences")
           .then((response) => response.json())
           .then((data) => {
-            data.unshift("Select Sequence")
+            data.unshift("Select Sequence");
             const selector = document.getElementById("sequence-selector");
             selector.innerHTML = ""; // Clear previous options
             data.forEach((sequence) => {
@@ -189,7 +189,7 @@
         button.innerText = "Sending...";
 
         if (action == "play") {
-          fetch(`/api/${action}`, { method: "POST", body: JSON.stringify({sequence: document.getElementById("sequence-selector").value})})
+          fetch(`/api/${action}`, { method: "POST", body: JSON.stringify({ sequence: document.getElementById("sequence-selector").value }) })
             .then((response) => response.json())
             .then((data) => {
               button.classList.remove("sending");
@@ -206,26 +206,27 @@
               setTimeout(() => {
                 button.innerText = action.charAt(0).toUpperCase() + action.slice(1);
               }, 3000);
-            });}
-        else {
-        fetch(`/api/${action}`, { method: "POST" })
-          .then((response) => response.json())
-          .then((data) => {
-            button.classList.remove("sending");
-            button.innerText = data.error ? "Error" : "Success!";
-            if (data.error) console.log(data.error);
+            });
+        } else {
+          fetch(`/api/${action}`, { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => {
+              button.classList.remove("sending");
+              button.innerText = data.error ? "Error" : "Success!";
+              if (data.error) console.log(data.error);
 
-            setTimeout(() => {
-              button.innerText = action.charAt(0).toUpperCase() + action.slice(1);
-            }, 3000);
-          })
-          .catch((error) => {
-            button.classList.remove("sending");
-            if (data.error) console.log(data.error);
-            setTimeout(() => {
-              button.innerText = action.charAt(0).toUpperCase() + action.slice(1);
-            }, 3000);
-          });}
+              setTimeout(() => {
+                button.innerText = action.charAt(0).toUpperCase() + action.slice(1);
+              }, 3000);
+            })
+            .catch((error) => {
+              button.classList.remove("sending");
+              if (data.error) console.log(data.error);
+              setTimeout(() => {
+                button.innerText = action.charAt(0).toUpperCase() + action.slice(1);
+              }, 3000);
+            });
+        }
       }
 
       // Fetch initial status on page load
@@ -289,6 +290,7 @@
         if (document.readyState === "complete") {
           showReloadImage();
           fetchSequences();
+          adjustButtonSize()
         }
       });
 
@@ -306,6 +308,10 @@
       window.addEventListener("resize", function () {
         adjustButtonSize();
       });
+
+      ["fullscreenchange", "webkitfullscreenchange", "mozfullscreenchange", "msfullscreenchange"].forEach((eventType) =>
+        window.addEventListener(eventType, adjustButtonSize())
+      );
     </script>
   </body>
 </html>

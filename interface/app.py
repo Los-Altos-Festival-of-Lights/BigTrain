@@ -4,7 +4,7 @@ import os, requests
 app = Flask(__name__)
 
 # Replace these values with your FalconPlayer API endpoints
-FALCON_PLAYER_BASE_URL = "http://" + os.environ.get('FALCON_IP', '10.2.0.1') + "/api/"
+FALCON_PLAYER_BASE_URL = "http://" + os.environ.get('FALCON_IP', '10.0.0.16') + "/api/"
 STATUS_ENDPOINT = 'fppd/status'
 SEQUENCES_ENDPOINT = 'playlists/playable'
 STOP_ENDPOINT = 'playlists/stop'
