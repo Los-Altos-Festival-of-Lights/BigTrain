@@ -18,9 +18,9 @@ selected_sequence = ""
 def send_request(endpoint, method, jsonify=True, **kwargs):
     try:
         if method == "get":
-            response = requests.get(FALCON_PLAYER_BASE_URL + endpoint, **kwargs)
+            response = requests.get(FALCON_PLAYER_BASE_URL + endpoint, timeout=1, **kwargs)
         else:
-            response = requests.post(FALCON_PLAYER_BASE_URL + endpoint, **kwargs)
+            response = requests.post(FALCON_PLAYER_BASE_URL + endpoint, timeout=1, **kwargs)
         if jsonify:
             return response.status_code, response.json()
         else:
@@ -37,11 +37,12 @@ def index():
 def status():
     status_code, response = send_request(STATUS_ENDPOINT, "get")
     if status_code == 500:
-        response = "Not Connected"
+        # response = {"status": "Playing", "sequence": "HEHEE.fseq"}
+        response = {"status": "Not Connected"}
     elif status_code == 200 and response["status_name"] == "idle":
-        response = "Ready"
+        response = {"status": "Ready"}
     elif status_code == 200 and response["status_name"] == "playing":
-        response = "Playing " + response["current_sequence"]
+        response = {"status": "Playing", "sequence": response["current_sequence"]}
     return jsonify(response), status_code
 
 @app.route('/api/sequences', methods=['GET'])

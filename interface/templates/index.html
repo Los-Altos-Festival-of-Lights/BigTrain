@@ -32,6 +32,13 @@
         margin: 0;
       }
 
+      #status-playing-text {
+        font-size: 2.5vw; /* Responsive font size based on viewport width */
+        font-weight: bold;
+        margin: 0;
+        display: none;
+      }
+
       #status-info {
         font-size: 3vw; /* Responsive font size based on viewport width */
         display: flex;
@@ -158,6 +165,7 @@
   <body>
     <div id="status-bar" class="not-connected">
       <p id="status-text">Status: <span id="status">Not Connected</span></p>
+      <p id="status-playing-text">Now Playing <span id="now-playing"></span></p>
       <img class="reload-image" src="/static/reload.png" alt="Reloading..." />
     </div>
     <div id="sequence-container">
@@ -246,7 +254,7 @@
           })
           .catch((error) => {
             console.error("Error fetching status:", error);
-            updateStatus("Server Unreachable");
+            updateStatus({status: "Server Unreachable"});
           })
           .finally(() => {
             showReloadImage();
@@ -255,10 +263,17 @@
 
       function updateStatus(status) {
         const statusElement = document.getElementById("status");
-        statusElement.innerText = status;
+        const statusPlayingElement = document.getElementById("status-playing-text");
+        const playingElement = document.getElementById("now-playing");
         const statusBar = document.getElementById("status-bar");
         const buttons = document.querySelectorAll(".control-button");
         const selector = document.getElementById("sequence-selector");
+        sequence = status?.sequence;
+        status = status.status;
+        statusElement.innerText = status;
+        statusBar.style.padding = "5vh 2vw"
+        statusPlayingElement.style.display = "none"
+        playingElement.style.display = "none";
         statusBar.className = "";
         if (status == "Server Unreachable") {
           statusBar.classList.add("server-unreachable");
@@ -273,10 +288,15 @@
             statusBar.classList.add("ready");
           } else {
             statusBar.classList.add("playing");
+            statusBar.style.padding = "1.5vh 2vw"
+            statusPlayingElement.style.display = "block"
+            playingElement.style.display = "inline-block"
+            playingElement.innerHTML = sequence
           }
           buttons.forEach((button) => button.removeAttribute("disabled"));
           selector.removeAttribute("disabled");
         }
+        adjustButtonSize()
       }
 
       adjustButtonSize();
