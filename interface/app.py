@@ -18,9 +18,9 @@ selected_sequence = ""
 def send_request(endpoint, method, jsonify=True, **kwargs):
     try:
         if method == "get":
-            response = requests.get(FALCON_PLAYER_BASE_URL + endpoint, timeout=1, **kwargs)
+            response = requests.get(FALCON_PLAYER_BASE_URL + endpoint, timeout=5, **kwargs)
         else:
-            response = requests.post(FALCON_PLAYER_BASE_URL + endpoint, timeout=1, **kwargs)
+            response = requests.post(FALCON_PLAYER_BASE_URL + endpoint, timeout=5, **kwargs)
         if jsonify:
             return response.status_code, response.json()
         else:
