@@ -179,10 +179,22 @@
     <div id="controls">
       <button class="control-button play" onclick="sendRequest(this, 'play')" disabled>Play</button>
       <button class="control-button stop" onclick="sendRequest(this, 'stop')" disabled>Stop</button>
-      <button class="control-button-e reload" onclick="window.location.reload()" disabled>Refresh</button>
-      <button class="control-button shutdown" onclick="sendRequest(this, 'shutdown')" disabled>Shutdown</button>
+      <button class="control-button-e reload" onclick="window.location.reload(); return false;" disabled>Refresh</button>
+      <button class="control-button shutdown" onclick="handleShutdown(this)" disabled>Shutdown</button>
     </div>
     <script>
+      function handleShutdown(button) {
+        if (confirm("Are you sure you want to shut down?") == true) {
+          sendRequest(button, 'shutdown')
+        } else {
+          button.innerText = "Cancelled!"
+          setTimeout(() => {
+            button.innerText = "Shutdown";
+          }, 3000);
+        }
+      }
+
+      let prevStatus = "";
       function fetchSequences() {
         fetch("/api/sequences")
           .then((response) => response.json())
@@ -270,6 +282,10 @@
         const selector = document.getElementById("sequence-selector");
         sequence = status?.sequence;
         status = status.status;
+        if ((prevStatus == "Server Unreachable" || prevStatus == "Not Connected") && (status == "Ready" || status == "Playing")) {
+          fetchSequences();
+        }
+        prevStatus = status
         statusElement.innerText = status;
         statusBar.style.padding = "5vh 2vw"
         statusPlayingElement.style.display = "none"

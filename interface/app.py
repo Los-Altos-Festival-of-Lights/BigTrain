@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-import os, requests
+import os, requests, time
 
 app = Flask(__name__)
 
@@ -76,4 +76,9 @@ def mute():
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown():
     status_code, response = send_request(SHUTDOWN_ENDPOINT, "get")
+    time.sleep(3)
+    shutdown_host()
     return jsonify(response), status_code
+
+def shutdown_host():
+    os.system("sudo shutdown -h now")
