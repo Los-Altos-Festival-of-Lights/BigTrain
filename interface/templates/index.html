@@ -179,7 +179,7 @@
     <div id="controls">
       <button class="control-button play" onclick="sendRequest(this, 'play')" disabled>Play</button>
       <button class="control-button stop" onclick="sendRequest(this, 'stop')" disabled>Stop</button>
-      <button class="control-button-e reload" onclick="window.location.reload(); return false;" disabled>Refresh</button>
+      <button class="control-button-e reload" onclick="() => {location.reload(); return false;}" disabled>Refresh</button>
       <button class="control-button shutdown" onclick="handleShutdown(this)" disabled>Shutdown</button>
     </div>
     <script>
@@ -187,7 +187,7 @@
         if (confirm("Are you sure you want to shut down?") == true) {
           sendRequest(button, 'shutdown')
         } else {
-          button.innerText = "Cancelled!"
+          button.innerText = "Aborted."
           setTimeout(() => {
             button.innerText = "Shutdown";
           }, 3000);
