@@ -81,7 +81,7 @@ body {
   --progress-success: #5c86ff;
   --tick-stroke: var(--progress-active);
   --shadow: rgba(0, 9, 61, 0.2);
-  font-size: 20px;
+  font-size: 80px;
   font-weight: 500;
   line-height: 19px;
   min-width: 150px;
@@ -228,7 +228,7 @@ html {
   --progress-success: #5c86ff;
   --tick-stroke: var(--progress-active);
   --shadow: rgba(0, 9, 61, 0.2);
-  font-size: 20px;
+  font-size: 80px;
   font-weight: 500;
   line-height: 19px;
   min-width: 150px;
