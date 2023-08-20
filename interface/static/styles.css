@@ -1,27 +1,506 @@
 /* devanagari */
 @font-face {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./pxiEyp8kv8JHgFVrJJbecmNE.woff2") format('woff2');
+  src: url("./pxiEyp8kv8JHgFVrJJbecmNE.woff2") format("woff2");
   unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20A8, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF;
 }
 /* latin-ext */
 @font-face {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./pxiEyp8kv8JHgFVrJJnecmNE.woff2") format('woff2');
+  src: url("./pxiEyp8kv8JHgFVrJJnecmNE.woff2") format("woff2");
   unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 /* latin */
 @font-face {
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("./pxiEyp8kv8JHgFVrJJfecg.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("./pxiEyp8kv8JHgFVrJJfecg.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+  box-sizing: inherit;
+  &:before,
+  &:after {
+    box-sizing: inherit;
+  }
+}
+
+body {
+  background-color: #000;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  z-index: 9997;
+}
+
+/* Styles for the modal box */
+#modal-container {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 70%;
+  transform: translate(-50%, -50%);
+  background-color: red;
+  padding: 20px;
+  zoom: 2.5;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.button-hold {
+  --color: #f6f8ff;
+  --background: #2b3044;
+  --icon: var(--color);
+  --progress-border: #646b8c;
+  --progress-active: #fff;
+  --progress-success: #5c86ff;
+  --tick-stroke: var(--progress-active);
+  --shadow: rgba(0, 9, 61, 0.2);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 19px;
+  min-width: 150px;
+  padding: 12px 20px 12px 12px;
+  border: 0;
+  border-radius: 24px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  -webkit-appearance: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 var(--shadow-y, 4px) var(--shadow-blur, 12px) var(--shadow);
+  transform: scale(var(--scale, 1)) translateZ(0);
+  color: var(--color);
+  background: var(--background);
+}
+.button-hold > div {
+  margin-right: 4px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  background: var(--progress-border);
+}
+.button-hold > div:before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  z-index: 1;
+  position: absolute;
+  background: var(--background);
+  border-radius: inherit;
+  transform: scale(var(--background-scale, 1));
+  transition: transform 0.32s ease;
+}
+.button-hold > div svg {
+  display: block;
+}
+.button-hold > div svg.icon,
+.button-hold > div svg.tick {
+  position: absolute;
+}
+.button-hold > div svg.icon {
+  width: 8px;
+  height: 8px;
+  left: 6px;
+  top: 6px;
+  fill: var(--icon);
+  z-index: 1;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: var(--icon-opacity, 1);
+  transform: translateY(var(--icon-y, 0)) scale(var(--icon-scale, 1));
+}
+.button-hold > div svg.progress,
+.button-hold > div svg.tick {
+  fill: none;
+}
+.button-hold > div svg.progress {
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg) scale(var(--progress-scale, 1));
+  transition: transform 0.5s ease;
+}
+.button-hold > div svg.progress circle {
+  stroke-dashoffset: 1;
+  stroke-dasharray: var(--progress-array, 0) 52;
+  stroke-width: 16;
+  stroke: var(--progress-active);
+  transition: stroke-dasharray var(--duration) linear;
+}
+.button-hold > div svg.tick {
+  width: 20px;
+  height: 20px;
+  left: 0;
+  top: 0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: var(--tick-stroke);
+  transition: stroke 0.3s ease 0.7s;
+}
+.button-hold > div svg.tick polyline {
+  stroke-dasharray: 18 18 18;
+  stroke-dashoffset: var(--tick-offset, 18);
+  transition: stroke-dashoffset 0.4s ease 0.7s;
+}
+.button-hold:focus:not(.process),
+.button-hold:hover:not(.process) {
+  --shadow-y: 8px;
+  --shadow-blur: 16px;
+}
+.button-hold:active:not(.success) {
+  --scale: 0.96;
+  --shadow-y: 4px;
+  --shadow-blur: 8px;
+}
+.button-hold.process,
+.button-hold.success {
+  --progress-array: 52;
+  --icon-y: -4px;
+  --icon-scale: 0.6;
+  --icon-opacity: 0;
+}
+.button-hold.success {
+  --progress-border: none;
+  --progress-scale: 0.11;
+  --tick-stroke: var(--progress-success);
+  --background-scale: 0;
+  --tick-offset: 36;
+}
+.button-hold.success > div svg.progress {
+  animation: tick 0.3s linear forwards 0.4s;
+}
+
+@keyframes tick {
+  100% {
+    transform: rotate(-90deg) translate(0, -5px) scale(var(--progress-scale));
+  }
+}
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: inherit;
+}
+*:before,
+*:after {
+  box-sizing: inherit;
+} /*# sourceMappingURL=style.css.map */
+
+.button-hold-shutdown {
+  --color: #f6f8ff;
+  --background: #2b3044;
+  --icon: var(--color);
+  --progress-border: #646b8c;
+  --progress-active: #fff;
+  --progress-success: #5c86ff;
+  --tick-stroke: var(--progress-active);
+  --shadow: rgba(0, 9, 61, 0.2);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 19px;
+  min-width: 150px;
+  padding: 12px 20px 12px 12px;
+  border: 0;
+  border-radius: 24px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  -webkit-appearance: none;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 var(--shadow-y, 4px) var(--shadow-blur, 12px) var(--shadow);
+  transform: scale(var(--scale, 1)) translateZ(0);
+  color: var(--color);
+  background: var(--background);
+}
+.button-hold-shutdown > div {
+  margin-right: 4px;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  background: var(--progress-border);
+}
+.button-hold-shutdown > div:before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  z-index: 1;
+  position: absolute;
+  background: var(--background);
+  border-radius: inherit;
+  transform: scale(var(--background-scale, 1));
+  transition: transform 0.32s ease;
+}
+.button-hold-shutdown > div svg {
+  display: block;
+}
+.button-hold-shutdown > div svg.icon,
+.button-hold-shutdown > div svg.tick {
+  position: absolute;
+}
+.button-hold-shutdown > div svg.icon {
+  width: 8px;
+  height: 8px;
+  left: 6px;
+  top: 6px;
+  fill: var(--icon);
+  z-index: 1;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: var(--icon-opacity, 1);
+  transform: translateY(var(--icon-y, 0)) scale(var(--icon-scale, 1));
+}
+.button-hold-shutdown > div svg.progress,
+.button-hold-shutdown > div svg.tick {
+  fill: none;
+}
+.button-hold-shutdown > div svg.progress {
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg) scale(var(--progress-scale, 1));
+  transition: transform 0.5s ease;
+}
+.button-hold-shutdown > div svg.progress circle {
+  stroke-dashoffset: 1;
+  stroke-dasharray: var(--progress-array, 0) 52;
+  stroke-width: 16;
+  stroke: var(--progress-active);
+  transition: stroke-dasharray var(--duration) linear;
+}
+.button-hold-shutdown > div svg.tick {
+  width: 20px;
+  height: 20px;
+  left: 0;
+  top: 0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: var(--tick-stroke);
+  transition: stroke 0.3s ease 0.7s;
+}
+.button-hold-shutdown > div svg.tick polyline {
+  stroke-dasharray: 18 18 18;
+  stroke-dashoffset: var(--tick-offset, 18);
+  transition: stroke-dashoffset 0.4s ease 0.7s;
+}
+.button-hold-shutdown:focus:not(.process),
+.button-hold-shutdown:hover:not(.process) {
+  --shadow-y: 8px;
+  --shadow-blur: 16px;
+}
+.button-hold-shutdown:active:not(.success) {
+  --scale: 0.96;
+  --shadow-y: 4px;
+  --shadow-blur: 8px;
+}
+.button-hold-shutdown.process,
+.button-hold-shutdown.success {
+  --progress-array: 52;
+  --icon-y: -4px;
+  --icon-scale: 0.6;
+  --icon-opacity: 0;
+}
+.button-hold-shutdown.success {
+  --progress-border: none;
+  --progress-scale: 0.11;
+  --tick-stroke: var(--progress-success);
+  --background-scale: 0;
+  --tick-offset: 36;
+}
+.button-hold-shutdown.success > div svg.progress {
+  animation: tick 0.3s linear forwards 0.4s;
+}
+
+#status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; /* Stack items vertically */
+  padding: 5vh 2vw; /* Responsive padding based on viewport size */
+  background-color: #007bff; /* Status bar background color */
+}
+
+#status-text {
+  font-size: 6vw; /* Responsive font size based on viewport width */
+  font-weight: bold;
+  margin: 0;
+}
+
+#status-playing-text {
+  font-size: 2.5vw; /* Responsive font size based on viewport width */
+  font-weight: bold;
+  margin: 0;
+  display: none;
+}
+
+#status-info {
+  font-size: 3vw; /* Responsive font size based on viewport width */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px; /* Add some space between Status bar and status info */
+}
+
+#status-info p {
+  margin: 0;
+}
+
+#sequence-container {
+  background-color: black;
+  padding: 1vh 2vw;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align children to the left */
+}
+
+#sequence-selector-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#sequence-selector-container label {
+  font-size: 3vw; /* Responsive font size based on viewport width */
+  margin: 0;
+}
+
+#sequence-selector {
+  font-size: 2.5vw; /* Responsive font size based on viewport width */
+  flex: 1;
+  min-width: 30em; /* Set a minimum width for the selector */
+  padding: 1vh 2vw;
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+#controls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Create a 2x2 grid */
+  gap: 10px;
+  padding: 0vh 1.5vw;
+  flex-direction: column; /* Make the buttons stack vertically */
+  flex-grow: 1; /* Make the controls container fill the remaining space */
+  height: fit-content;
+  padding-bottom: 2vh;
+}
+
+.control-button {
+  border-radius: 24px;
+  flex-grow: 1;
+  font-size: 8vw; /* Responsive font size based on viewport width */
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 2vh 4vw;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.05s ease-out;
+}
+
+.control-button:active {
+  transform: scale(0.95);
+}
+
+.control-button:disabled {
+  transform: none;
+}
+
+.control-button-e {
+  border-radius: 24px;
+  flex-grow: 1;
+  font-size: 8vw; /* Responsive font size based on viewport width */
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 2vh 4vw;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.05s ease-out;
+}
+
+.control-button-e:active {
+  transform: scale(0.95);
+}
+
+/* Status bar colors */
+#status-bar.server-unreachable {
+  background-color: #dc3545;
+}
+#status-bar.not-connected {
+  background-color: #dc3545;
+}
+#status-bar.ready {
+  background-color: #ffc107;
+}
+#status-bar.playing {
+  background-color: #32d519;
+}
+
+/* Reload image */
+.reload-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 4vw;
+  height: 4vw;
+  opacity: 0;
+}
+
+/* Media queries for further responsiveness */
+@media screen and (max-width: 768px) {
+  /* Adjust styles for smaller screens */
+  #status-text {
+    font-size: 8vw;
+  }
+
+  #sequence-selector {
+    font-size: 4vw;
+    min-width: 150px;
+    max-width: 80vw;
+  }
+
+  .control-button {
+    font-size: 5vw;
+    padding: 3vh 6vw;
+  }
 }
